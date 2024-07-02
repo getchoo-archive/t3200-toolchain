@@ -28,6 +28,18 @@
       );
     in
     {
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgsFor.${system}.native;
+        in
+        {
+          firmware-build = pkgs.callPackage ./firmware-build-shell.nix {
+            toolchain = self.packages.${system}.default;
+          };
+        }
+      );
+
       formatter = forAllSystems (system: nixpkgsFor.${system}.native.nixfmt-rfc-style);
 
       packages = forAllSystems (
